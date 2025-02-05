@@ -3,73 +3,73 @@ function getRandom() {
 }
 
 function getComputerChoice() {
-    var x = getRandom();
-    if (x < 3.333)
-    {
-        print = "rock"
+    let x = getRandom();
+    if (x < 3.333) {
+        return "rock";
+    } else if (x < 6.666) {
+        return "paper";
+    } else {
+        return "scissors";
     }
-    else if (x < 6.666)
-    {
-        print = "paper"
-    }
-    else {
-        print = "scissors"
-    }
-     return print;
+}
 
-    }
-    function getHumanChoice() {
-        let wybor;
-        const validChoices = ["rock", "paper", "scissors"];
-        
-        do {
-            wybor = window.prompt("Twój wybór (rock, paper, scissors):").toLowerCase();
-        } while (!validChoices.includes(wybor));
-        
-        return wybor;
-    }
-    
+const buttonPaper = document.createElement("button");
+const buttonRock = document.createElement("button");
+const buttonScissors = document.createElement("button");
+document.body.appendChild(buttonPaper);
+document.body.appendChild(buttonRock);
+document.body.appendChild(buttonScissors);
+buttonPaper.textContent = "PAPIER";
+buttonRock.textContent = "KAMIEN";
+buttonScissors.textContent = "NOZYCE";
+
 let humanScore = 0;
 let computerScore = 0;
+let gameOver = false;  // Zmienna do zatrzymania gry po osiągnięciu 5 punktów przez jednego z graczy
 
-function playRound(humanChoice, computerChoice) {
-    humanChoice = humanChoice.toLowerCase();
-    
+// Dodajemy div do wyświetlania wyników
+const allScore = document.createElement("div");
+document.body.appendChild(allScore);
+
+const textScore = document.createElement("p");
+allScore.appendChild(textScore);
+textScore.textContent = `WYNIK KOMPUTERA: ${computerScore}  ::  WYNIK GRACZA: ${humanScore}`;
+
+function playRound(humanChoice) {
+    if (gameOver) return;  // Jeżeli gra się skończyła, nie pozwól na dalsze kliknięcia
+
+    let computerChoice = getComputerChoice();
 
     if (humanChoice === computerChoice) {
-        console.log(`Remis! Obaj wybraliście ${humanChoice}.`);
+        textScore.textContent = `Remis! Obaj wybraliście ${humanChoice}. Wynik: Człowiek ${humanScore} - Komputer ${computerScore}`;
     } else if (
         (humanChoice === "rock" && computerChoice === "scissors") ||
         (humanChoice === "scissors" && computerChoice === "paper") ||
         (humanChoice === "paper" && computerChoice === "rock")
     ) {
         humanScore++;
-        console.log(`Wygrałeś! ${humanChoice} pokonuje ${computerChoice}.`);
+        textScore.textContent = `Wygrałeś! ${humanChoice} pokonuje ${computerChoice}. Wynik: Człowiek ${humanScore} - Komputer ${computerScore}`;
     } else {
         computerScore++;
-        console.log(`Przegrałeś! ${computerChoice} pokonuje ${humanChoice}.`);
+        textScore.textContent = `Przegrałeś! ${computerChoice} pokonuje ${humanChoice}. Wynik: Człowiek ${humanScore} - Komputer ${computerScore}`;
     }
-    
-    console.log(`Wynik: Człowiek ${humanScore} - Komputer ${computerScore}`);
+
+    // Sprawdzenie, czy ktoś osiągnął 5 punktów
+    if (humanScore === 5) {
+        textScore.textContent = `Gratulacje! Wygrałeś grę! Wynik końcowy: Człowiek ${humanScore} - Komputer ${computerScore}`;
+        gameOver = true;  // Zatrzymujemy grę
+    } else if (computerScore === 5) {
+        textScore.textContent = `Niestety, przegrałeś! Komputer wygrał grę. Wynik końcowy: Człowiek ${humanScore} - Komputer ${computerScore}`;
+        gameOver = true;  // Zatrzymujemy grę
+    }
 }
 
-
-
- for (let i = 1; i <= 5; i++) {
-    console.log(`Runda ${i}:`);
-    const humanSelection = getHumanChoice();  
-    const computerSelection = getComputerChoice();  
-    playRound(humanSelection, computerSelection); 
-}
-
-console.log(`Wynik końcowy: Człowiek ${humanScore} - Komputer ${computerScore}`);
-if (humanScore > computerScore) {
-    console.log("Gratulacje, wygrałeś grę!");
-} else if (computerScore > humanScore) {
-    console.log("Niestety, przegrałeś grę!");
-} else {
-    console.log("Remis!");
-}
-
-    
-
+buttonPaper.addEventListener("click", function() {
+    playRound("paper");
+});
+buttonRock.addEventListener("click", function() {
+    playRound("rock");
+});
+buttonScissors.addEventListener("click", function() {
+    playRound("scissors");
+});
